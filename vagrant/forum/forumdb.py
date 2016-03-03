@@ -37,3 +37,10 @@ def AddPost(content):
     c.execute("INSERT INTO posts (content) VALUES ('%s')" (content,))
     DB.commit()
     DB.close()
+
+    update posts
+        set content = 'cheese'
+        where content like
+            '%spam%';
+
+
