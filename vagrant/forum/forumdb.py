@@ -5,7 +5,7 @@
 import time
 
 ## Database connection
-DB = []
+import psycopg2
 
 ## Get posts from database.
 def GetAllPosts():
@@ -17,7 +17,7 @@ def GetAllPosts():
       it was posted.
     '''
 
-    DB = psycopg.connect("dbname=forum")
+    DB = psycopg2.connect("dbname=forum")
     c = DB.cursor()
     c.execute("SELECT time, content FROM posts ORDER BY time DESC")
     posts = ({'content': str(row[1]), 'time': str(row[0])}
@@ -34,6 +34,6 @@ def AddPost(content):
     '''
     DB = psycopg2.connect("dbname=forum")
     c = DB.cursor()
-    c.execute("INSERT INTO posts (content) VALUES ('%s')" % content)
+    c.execute("INSERT INTO posts (content) VALUES ('%s')" (content,))
     DB.commit()
     DB.close()
