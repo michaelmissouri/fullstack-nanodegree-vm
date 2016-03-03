@@ -2,7 +2,7 @@
 # DB Forum - a buggy web forum server backed by a good database
 #
 
-# This is a test
+# Testing
 
 # The forumdb module is where the database interface code goes.
 import forumdb
