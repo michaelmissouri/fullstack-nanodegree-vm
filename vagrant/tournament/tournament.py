@@ -6,37 +6,38 @@
 import psycopg2
 
 
-def connect():
-    """Connect to the PostgreSQL database.  Returns a database connection."""
-    return psycopg2.connect("dbname=tournament")
+def connect(database_name="tournament"):
+    try:
+        db = psycopg2.connect("dbname={}".format(database_name))
+        cursor = db.cursor()
+        return db, cursor
+    except:
+        print("<error message>")
 
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    conn = connect()
-    c = conn.cursor()
-    c.execute('Delete From matches')
-    conn.commit()
-    conn.close()
+    db, cursor = connect()
+    cursor.execute('Delete From matches')
+    db.commit()
+    db.close()
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    conn = connect()
-    c = conn.cursor()
-    c.execute('Delete From players')
-    conn.commit()
-    conn.close()
+    db, cursor = connect()
+    cursor.execute('Delete From players')
+    db.commit()
+    db.close()
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    conn = connect()
-    cursor = conn.cursor()
+    db, cursor = connect()
     query = "Select Count(*) From players;"
     cursor.execute(query)
     count = cursor.fetchall()
-    conn.close()
+    db.close()
     return count[0][0]
 
 
@@ -49,19 +50,18 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    conn = connect()
-    cursor = conn.cursor()
+    db, cursor = connect()
     query = "Insert Into players (name) Values (%s);"
     cursor.execute(query, (name,))
-    conn.commit()
-    conn.close()
+    db.commit()
+    db.close()
     
 
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
 
-    The first entry in the list should be the player in first place, or a player
-    tied for first place if there is currently a tie.
+    The first entry in the list should be the player in first place,
+    or a player tied for first place if there is currently a tie.
 
     Returns:
       A list of tuples, each of which contains (id, name, wins, matches):
@@ -70,12 +70,11 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    conn = connect()
-    cursor = conn.cursor()
+    db, cursor = connect()
     query = "SELECT * FROM player_standings;"
     cursor.execute(query)
     rows = cursor.fetchall()
-    conn.close()
+    db.close()
     return rows
     
 
@@ -86,11 +85,11 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-    conn = connect()
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO matches (winner, loser) VALUES (%s, %s) returning winner loser;", (winner, loser, ))
-    conn.commit()
-    conn.close()
+    db, cursor = connect()
+    cursor.execute('''INSERT INTO matches (winner, loser) VALUES (%s, %s)
+                    returning winner loser;''', (winner, loser, ))
+    db.commit()
+    db.close()
     
  
 def swissPairings():
