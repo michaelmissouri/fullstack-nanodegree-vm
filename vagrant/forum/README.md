@@ -28,7 +28,7 @@ Make sure that the class Movie() is set up correctly and that it includes all co
 
 Your process:
 
-The class has four parameters: title, storyline, description/synopsis, and trailer. Youâll need to:
+The class has four parameters: title, storyline, description/synopsis, and trailer. You will need to:
 
 Build four instance variables that contain the information for each of your favorite movies. You will need to
 define a separate instance for every movie. See examples below.
